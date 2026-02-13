@@ -1,0 +1,235 @@
+<!-- 
+PANDUAN: Buka file ini di browser untuk mengisi data contoh otomatis
+atau copy-paste script di bawah ke console browser (F12)
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seed Data Ramadhan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #8b5cf6; }
+        button { 
+            padding: 10px 20px; 
+            font-size: 16px; 
+            background: #8b5cf6; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer;
+        }
+        button:hover { background: #764ba2; }
+        .success { color: green; margin-top: 10px; }
+        .info { background: #f0f7ff; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        code { background: #f5f5f5; padding: 2px 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌙 Seed Data Manajemen Keuangan Ramadhan</h1>
+        
+        <div class="info">
+            <strong>⚠️ Perhatian:</strong><br>
+            Tool ini akan mengisi data contoh otomatis ke aplikasi Anda.
+            Data lama akan ditimpa jika sudah ada.
+        </div>
+
+        <h2>Pilih Dataset:</h2>
+        
+        <button onclick="seedBasic()">📊 Seed Data Dasar (3 Anggota)</button>
+        <button onclick="seedAdvanced()">📈 Seed Data Lengkap (5 Anggota + History)</button>
+        <button onclick="clearAllData()">🗑️ Hapus Semua Data</button>
+
+        <div id="message"></div>
+
+        <div class="info" style="margin-top: 30px;">
+            <h3>Dataset Dasar Berisi:</h3>
+            <ul>
+                <li>3 Anggota (Ibu Umum, Bapak Sholeh, Adik Fauziah)</li>
+                <li>Saldo Rp 100.000 - 150.000 per anggota</li>
+                <li>Hari Ramadhan: Hari ke-1</li>
+            </ul>
+
+            <h3>Dataset Lengkap Berisi:</h3>
+            <ul>
+                <li>5 Anggota dengan saldo berbeda</li>
+                <li>5 Jadwal masak</li>
+                <li>20+ Riwayat transaksi simulasi</li>
+                <li>Hari Ramadhan: Hari ke-5</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function seedBasic() {
+            const data = {
+                members: [
+                    { id: 1, name: 'Ibu Umum', balance: 150000, createdAt: new Date().toISOString() },
+                    { id: 2, name: 'Bapak Sholeh', balance: 150000, createdAt: new Date().toISOString() },
+                    { id: 3, name: 'Adik Fauziah', balance: 100000, createdAt: new Date().toISOString() }
+                ],
+                schedules: [],
+                history: [],
+                day: 1
+            };
+
+            localStorage.setItem('ramadhan_members', JSON.stringify(data.members));
+            localStorage.setItem('ramadhan_schedules', JSON.stringify(data.schedules));
+            localStorage.setItem('ramadhan_history', JSON.stringify(data.history));
+            localStorage.setItem('ramadhan_day', data.day);
+
+            showMessage('✅ Data dasar berhasil ditambahkan! Reload halaman aplikasi untuk melihat perubahan.', 'success');
+        }
+
+        function seedAdvanced() {
+            const now = new Date();
+            const baseTime = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+            const data = {
+                members: [
+                    { id: 1, name: 'Ibu Umum', balance: 82000, createdAt: new Date().toISOString() },
+                    { id: 2, name: 'Bapak Sholeh', balance: 120000, createdAt: new Date().toISOString() },
+                    { id: 3, name: 'Adik Fauziah', balance: 58000, createdAt: new Date().toISOString() },
+                    { id: 4, name: 'Kak Muslim', balance: 105000, createdAt: new Date().toISOString() },
+                    { id: 5, name: 'Mbak Siti', balance: 142000, createdAt: new Date().toISOString() }
+                ],
+                schedules: [
+                    { id: 101, name: 'Grup A: Masak Utama', day: 1, description: 'Nasi goreng, kuah, sambal' },
+                    { id: 102, name: 'Grup B: Lauk Pauk', day: 2, description: 'Ayam goreng, tempe, tahu' },
+                    { id: 103, name: 'Grup C: Minuman', day: 3, description: 'Sirup, es cendol, kolak' },
+                    { id: 104, name: 'Grup A: Puding & Dessert', day: 4, description: 'Puding, es krim, kue' },
+                    { id: 105, name: 'Grup B: Nasi & Lauk', day: 5, description: 'Nasi kuning, gulai' }
+                ],
+                history: generateHistory(),
+                day: 5
+            };
+
+            localStorage.setItem('ramadhan_members', JSON.stringify(data.members));
+            localStorage.setItem('ramadhan_schedules', JSON.stringify(data.schedules));
+            localStorage.setItem('ramadhan_history', JSON.stringify(data.history));
+            localStorage.setItem('ramadhan_day', data.day);
+
+            showMessage('✅ Data lengkap berhasil ditambahkan! Reload halaman aplikasi untuk melihat perubahan.', 'success');
+        }
+
+        function generateHistory() {
+            const members = [
+                { id: 1, name: 'Ibu Umum' },
+                { id: 2, name: 'Bapak Sholeh' },
+                { id: 3, name: 'Adik Fauziah' },
+                { id: 4, name: 'Kak Muslim' },
+                { id: 5, name: 'Mbak Siti' }
+            ];
+
+            const history = [];
+            let id = 1001;
+
+            // Hari 1: Buka Puasa untuk semua
+            members.forEach(m => {
+                history.push({
+                    id: id++,
+                    memberId: m.id,
+                    memberName: m.name,
+                    amount: -3000,
+                    description: 'Buka Puasa',
+                    date: new Date(2024, 1, 27, 18, 30).toISOString(),
+                    day: 1
+                });
+            });
+
+            // Hari 1: Sahur untuk semua
+            members.forEach(m => {
+                history.push({
+                    id: id++,
+                    memberId: m.id,
+                    memberName: m.name,
+                    amount: -3000,
+                    description: 'Sahur',
+                    date: new Date(2024, 1, 28, 4, 30).toISOString(),
+                    day: 1
+                });
+            });
+
+            // Hari 2: Top up untuk beberapa
+            history.push({
+                id: id++,
+                memberId: 3,
+                memberName: 'Adik Fauziah',
+                amount: 50000,
+                description: 'Top Up Saldo',
+                date: new Date(2024, 1, 28, 10, 0).toISOString(),
+                day: 2
+            });
+
+            // Hari 2-5: Buka & Sahur untuk semua
+            for (let day = 2; day <= 5; day++) {
+                members.forEach(m => {
+                    history.push({
+                        id: id++,
+                        memberId: m.id,
+                        memberName: m.name,
+                        amount: -3000,
+                        description: 'Buka Puasa',
+                        date: new Date(2024, 1, 27 + day, 18, 30).toISOString(),
+                        day: day
+                    });
+                    history.push({
+                        id: id++,
+                        memberId: m.id,
+                        memberName: m.name,
+                        amount: -3000,
+                        description: 'Sahur',
+                        date: new Date(2024, 1, 28 + day, 4, 30).toISOString(),
+                        day: day
+                    });
+                });
+            }
+
+            // Top up untuk Ibu Umum
+            history.push({
+                id: id++,
+                memberId: 1,
+                memberName: 'Ibu Umum',
+                amount: 40000,
+                description: 'Top Up Saldo',
+                date: new Date(2024, 2, 2, 12, 0).toISOString(),
+                day: 4
+            });
+
+            return history;
+        }
+
+        function clearAllData() {
+            if (confirm('⚠️ PERHATIAN: Anda akan menghapus SEMUA data!\n\nLanjutkan?')) {
+                localStorage.removeItem('ramadhan_members');
+                localStorage.removeItem('ramadhan_schedules');
+                localStorage.removeItem('ramadhan_history');
+                localStorage.removeItem('ramadhan_day');
+                showMessage('✅ Semua data berhasil dihapus! Reload halaman aplikasi.', 'success');
+            }
+        }
+
+        function showMessage(msg, type) {
+            const el = document.getElementById('message');
+            el.className = type;
+            el.textContent = msg;
+            if (type === 'success') {
+                setTimeout(() => { el.textContent = ''; }, 5000);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="theme-color" content="#8b5cf6">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Manajemen Ramadhan</title>
+    <link rel="stylesheet" href="style.min.css">
+    <style>
+        body { margin: 0; padding: 0; }
+        * { -webkit-tap-highlight-color: transparent; }
+        input, select, textarea {-webkit-appearance: none; -webkit-user-select: text; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1>🌙 Manajemen Keuangan Ramadhan</h1>
+                <p class="year">Tahun 1447 H</p>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="navbar">
+            <button class="nav-btn active" data-tab="dashboard">Dashboard</button>
+            <button class="nav-btn" data-tab="members">Anggota</button>
+            <button class="nav-btn" data-tab="schedule">Jadwal Masak</button>
+            <button class="nav-btn" data-tab="history">Riwayat</button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Tab: Dashboard -->
+            <section id="dashboard" class="tab-content active">
+                <div class="dashboard-grid">
+                    <!-- Total Summary -->
+                    <div class="summary-card">
+                        <div class="card-header">
+                            <h3>💰 Total Saldo</h3>
+                        </div>
+                        <div class="summary-content">
+                            <div class="big-number" id="totalBalance">Rp 0</div>
+                            <p class="subtitle">Jumlah semua anggota</p>
+                        </div>
+                    </div>
+
+                    <!-- Members Count -->
+                    <div class="summary-card">
+                        <div class="card-header">
+                            <h3>👥 Anggota</h3>
+                        </div>
+                        <div class="summary-content">
+                            <div class="big-number" id="membersCount">0</div>
+                            <p class="subtitle">Total anggota aktif</p>
+                        </div>
+                    </div>
+
+                    <!-- Today Deduction -->
+                    <div class="summary-card">
+                        <div class="card-header">
+                            <h3>📉 Pengurangan Hari Ini</h3>
+                        </div>
+                        <div class="summary-content">
+                            <div class="big-number" id="todayDeduction">Rp 0</div>
+                            <p class="subtitle">Total yang dikurangi</p>
+                        </div>
+                    </div>
+
+                    <!-- Ramadan Day -->
+                    <div class="summary-card">
+                        <div class="card-header">
+                            <h3>📅 Hari Ke</h3>
+                        </div>
+                        <div class="summary-content">
+                            <div class="big-number" id="ramadanDay">1</div>
+                            <p class="subtitle">Ramadhan</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Members Balance List -->
+                <div class="section-card">
+                    <h2>💳 Saldo Anggota</h2>
+                    <div id="dashboardMembersList" class="members-list">
+                        <p class="empty-state">Belum ada anggota. Tambahkan anggota terlebih dahulu.</p>
+                    </div>
+                </div>
+
+                <!-- Quick Action -->
+                <div class="section-card">
+                    <h2>⚡ Tindakan Cepat</h2>
+                    <div class="quick-actions">
+                        <button class="btn btn-primary" id="quickBukaBtn">Buka Puasa (-Rp 3.000)</button>
+                        <button class="btn btn-secondary" id="quickSahurBtn">Sahur (-Rp 3.000)</button>
+                        <button class="btn btn-info" id="quickBothBtn">Buka + Sahur (-Rp 6.000)</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tab: Members -->
+            <section id="members" class="tab-content">
+                <div class="section-header">
+                    <h2>👥 Daftar Anggota</h2>
+                    <button class="btn btn-primary" id="addMemberBtn">+ Tambah Anggota</button>
+                </div>
+
+                <div class="form-container" id="addMemberForm" style="display: none;">
+                    <div class="form-group">
+                        <label>Nama Anggota</label>
+                        <input type="text" id="memberName" placeholder="Masukkan nama anggota">
+                    </div>
+                    <div class="form-group">
+                        <label>Saldo Awal</label>
+                        <input type="number" id="memberBalance" placeholder="Masukkan saldo awal" min="0" value="100000">
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-success" id="saveMemberBtn">Simpan</button>
+                        <button class="btn btn-cancel" id="cancelMemberBtn">Batal</button>
+                    </div>
+                </div>
+
+                <div id="membersList" class="members-grid">
+                    <p class="empty-state">Belum ada anggota</p>
+                </div>
+            </section>
+
+            <!-- Tab: Schedule -->
+            <section id="schedule" class="tab-content">
+                <div class="section-header">
+                    <h2>🍽️ Jadwal Masak</h2>
+                    <button class="btn btn-primary" id="addScheduleBtn">+ Tambah Jadwal</button>
+                </div>
+
+                <div class="form-container" id="addScheduleForm" style="display: none;">
+                    <div class="form-group">
+                        <label>Nama Grup</label>
+                        <input type="text" id="scheduleName" placeholder="Misal: Grup A, Grup B">
+                    </div>
+                    <div class="form-group">
+                        <label>Hari Ke (Ramadhan)</label>
+                        <input type="number" id="scheduleDay" placeholder="1-30" min="1" max="30">
+                    </div>
+                    <div class="form-group">
+                        <label>Anggota Grup (Max 3 orang)</label>
+                        <div id="scheduleMembers" class="checkbox-group">
+                            <p style="color: #999;">Tambahkan anggota terlebih dahulu</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Deskripsi</label>
+                        <textarea id="scheduleDescription" placeholder="Deskripsi kegiatan masak"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-success" id="saveScheduleBtn">Simpan</button>
+                        <button class="btn btn-cancel" id="cancelScheduleBtn">Batal</button>
+                    </div>
+                </div>
+
+                <div id="scheduleList" class="schedule-grid">
+                    <p class="empty-state">Belum ada jadwal masak</p>
+                </div>
+            </section>
+
+            <!-- Tab: History -->
+            <section id="history" class="tab-content">
+                <div class="section-header">
+                    <h2>📊 Rekap Riwayat Transaksi</h2>
+                    <div class="filter-controls">
+                        <select id="historyMemberFilter" class="form-control">
+                            <option value="">Semua Anggota</option>
+                        </select>
+                        <button class="btn btn-info" id="exportHistoryBtn">📥 Export</button>
+                        <button class="btn btn-danger" id="clearHistoryBtn">🗑️ Hapus Semua</button>
+                    </div>
+                </div>
+
+                <div class="history-summary">
+                    <div class="summary-item">
+                        <label>Total Transaksi:</label>
+                        <span id="totalTransactions">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <label>Total Dikurangi:</label>
+                        <span id="totalReduced">Rp 0</span>
+                    </div>
+                </div>
+
+                <div id="historyList" class="history-table">
+                    <p class="empty-state">Belum ada riwayat transaksi</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modal for Member Details -->
+    <div id="memberModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Detail Anggota</h2>
+            <div id="modalBody" class="modal-body">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Quick Action -->
+    <div id="quickActionModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Tindakan Cepat</h2>
+            <div class="modal-body">
+                <label>Pilih Anggota:</label>
+                <select id="quickActionMember" class="form-control">
+                    <option value="">-- Pilih Anggota --</option>
+                </select>
+                <div id="quickActionButtons" class="form-actions" style="margin-top: 20px;">
+                    <!-- Buttons akan ditambahkan via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Edit Schedule -->
+    <div id="scheduleModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Jadwal Masak</h2>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Nama Grup</label>
+                    <input type="text" id="editScheduleName" placeholder="Misal: Grup A, Grup B">
+                </div>
+                <div class="form-group">
+                    <label>Hari Ke (Ramadhan)</label>
+                    <input type="number" id="editScheduleDay" placeholder="1-30" min="1" max="30">
+                </div>
+                <div class="form-group">
+                    <label>Anggota Grup (Max 3 orang)</label>
+                    <div id="editScheduleMembers" class="checkbox-group">
+                        <!-- Dynamic checkboxes -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Deskripsi</label>
+                    <textarea id="editScheduleDescription" placeholder="Deskripsi kegiatan masak"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-success" id="saveEditScheduleBtn">Simpan</button>
+                    <button class="btn btn-cancel" onclick="document.getElementById('scheduleModal').classList.remove('show')">Batal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
